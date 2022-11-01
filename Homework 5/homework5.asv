@@ -2,15 +2,15 @@ close all
 clear all
 clc
 
-sum_geo = zeros(229,407)
+sum_geo = zeros("double")
 map_struct = dir('*.asc')
 
 for map = 1:size(map_struct)
-
+    % Read map data, store info as geographic and double point into A
     [A,R] = readgeoraster(map_struct(map).name,'CoordinateSystemType','geographic','OutputType','double')
-    
-    if sum_geo == zeros(229,407)
-        sum_geo = size(A)
+    % Add each map data together
+    if sum_geo == zeros("double")
+        sum_geo = size(A)   % Assing matrix size of georaster data
         sum_geo = A
     else
         sum_geo = plus(sum_geo,A)
@@ -27,11 +27,15 @@ longlim = R.LongitudeLimits
 usamap(latlim,longlim)
 % Create a map using added precipitation data on a contour map
 my_map = geoshow(sum_geo,R,'DisplayType','contour','LevelList',[0:200:5000])
-colorbar
+my_colorbar = colorbar
+my_colorbar.Label.String = "Precipitation"
 title('Total Precipitation in Oregon: 1983')
-xlabel('Longitude')
-ylabel('Latitude')
 
+print -dpng -r300 or_precip_1983.png
 
-
+% Just having fun with other imaging
+fig_3d = figure('Name', 'Total Precipitaiton in Oregon: 1983')
+usamap(latlim,longlim)
+map_3d = geoshow(sum_geo,R,'DisplayType','surface','XData',[0:200:5000])
+colorbar
 

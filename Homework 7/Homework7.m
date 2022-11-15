@@ -6,7 +6,7 @@ clc
 gamma = [0 0.05 0.1 0.2];
 angle_launch = 40;
 speed_launch = 180;
-t_span = [0,50];
+t_span = [0,25];
 
 % Initial Conditions
 x10 = 0;

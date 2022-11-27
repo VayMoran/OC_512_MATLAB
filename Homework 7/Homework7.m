@@ -20,18 +20,11 @@ test0 = [x10 y10 x20 y20];
 test_total = @(x,y,gamma) [y(3);y(4);-gamma*(sqrt(y(3)^2 + y(4)^2))*y(3);-gamma*(sqrt(y(3)^2 + y(4)^2))*y(4)-9.81];
 
 % Plot four gamma values
-[x1,y1] = ode45(test_total,t_span,test0,[],gamma(1));
-plot(x1,y1(:,2));
-hold on
-[x2,y2] = ode45(test_total,t_span,test0,[],gamma(2));
-plot(x2,y2(:,2));
-hold on 
-[x3,y3] = ode45(test_total,t_span,test0,[],gamma(3));
-plot(x3,y3(:,2));
-hold on
-[x4,y4] = ode45(test_total,t_span,test0,[],gamma(4));
-plot(x4,y4(:,2));
-hold on
+for i = 1:4
+    [testx testy] = ode45(test_total,t_span,test0,[],gamma(i))
+    plot(testx, testy(:,2))
+    hold on
+end
 
 % Making the plot pretty
 ylim([0 inf])

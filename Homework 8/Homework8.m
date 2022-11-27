@@ -1,0 +1,119 @@
+close all
+clear all
+clc
+
+% Create waves and noise
+t_main = 1:0.5:135000;
+
+wave_main = 0.5 * sin((2*pi/10)*t_main);
+wave_infragravity = 0.25 * sin((2*pi/200)*t_main);
+wave_tides = 1.5*sin((2*pi/45000)*t_main);
+wave_combined = wave_main + wave_infragravity + wave_tides;
+wave_noise = wave_combined + (0.1* sin(randn(size(wave_combined))));
+
+% Show Three Waves without being combined or with noise
+%figure(1);
+%plot(t_main,wave_main);
+%hold on;
+%plot(t_main,wave_infragravity);
+%hold on;
+%plot(t_main,wave_tides);
+%title('Given "True" Waves');
+%xlabel('Time (s)');
+%ylabel('Wave Signature (m)');
+%legend('Main Wave','Infragravity Wave', 'Tidal Wave');
+
+% Show Combined Waves without Noise
+%figure(2);
+%plot(t_main,wave_combined);
+%title('Combined Wave Signature');
+%xlabel('Time (s)');
+%ylabel('Wave Signature (m)');
+
+% Question 1 Solution
+% Noisy Combined Waves, Beginning of Problem
+fig_combined = figure(3);
+plot_noise = plot(t_main, wave_noise);
+title('Noisy Wave Signature');
+xlabel('Time (s)');
+ylabel('Wave Signature (m)');
+
+% Question 2 Solution
+% Isoloated Wave Signal
+% t = 100
+smooth_main = smooth(wave_noise, 8); % Smooth base data
+smooth_main = smooth_main' - wave_infragravity - wave_tides; % Remove infragravity and tide data
+
+% Question 3 Solution
+% Isoloated Infragravity Signal
+% t = 1000
+smooth_infragravity = wave_noise -wave_main-wave_tides; % Remove main and tidal wave
+
+% FiltFilt to reduce wave along infragravity wave
+windowsize = 70;
+h=ones(1,windowsize)/windowsize;
+smooth_infragravity = filtfilt(h,1,smooth_infragravity);
+
+%%
+% Question 4 Solution
+% Isoloated Tidal Signal
+windowsize = 700;
+h=ones(1,windowsize)/windowsize;
+smooth_tides = filtfilt(h,1,wave_noise);
+smooth_tides = smooth(smooth_tides,1000);
+
+%%
+% Question 5 Solution
+% Combined Plots
+figure(7);
+subplot(4,3,1);
+plot_noise1 = plot(t_main, wave_noise);
+title('Noisy Wave Signature');
+xlabel('Time (s)');
+ylabel('Wave Signature (m)');
+xlim([0 30]);
+
+subplot(4,3,2);
+plot_noise2 = plot(t_main, wave_noise);
+title('Noisy Wave Signature');
+xlabel('Time (s)');
+ylabel('Wave Signature (m)');
+xlim([0 600]);
+
+subplot(4,3,3);
+plot_noise2 = plot(t_main, wave_noise);
+title('Noisy Wave Signature');
+xlabel('Time (s)');
+ylabel('Wave Signature (m)');
+xlim([0 135000]);
+
+subplot(4,1,2);
+plot_main_smoothed = plot(t_main, smooth_main);
+hold on;
+plot_main = plot(t_main,wave_main);
+title('Isolated Main Wave');
+xlabel('Time (s)');
+ylabel('Wave Signature (m)');
+legend('Smoothed Signal', 'True Signal');
+xlim([0 30]);
+ylim([-0.5 0.5]);
+
+subplot(4,1,3);
+plot_infragravity_smooth = plot(t_main,smooth_infragravity);
+hold on;
+plot_infragravity = plot(t_main,wave_infragravity);
+title('Isolated Infragravity Wave');
+xlabel('Time (s)');
+ylabel('Wave Signature (m)');
+legend('Smoothed Signal', 'True Signal');
+xlim([0 600]);
+ylim([-0.25 0.25]);
+
+subplot(4,1,4);
+plot_tides_smooth = plot(t_main, smooth_tides);
+hold on;
+plot_tides = plot(t_main,wave_tides);
+title('Isolated Tidal Wave');
+xlabel('Time (s)');
+ylabel('Wave Signature (m)');
+legend('Smoothed Signal', 'True Signal');

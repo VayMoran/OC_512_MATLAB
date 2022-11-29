@@ -1,0 +1,52 @@
+State	Area (km^2)	Precipitation (m)
+Alabama	133884	1425
+Alaska	1501596	NaN
+Arizona	295273	295
+Arkansas	137730	1310
+California	410076	355
+Colorado	269600	490
+Connecticut	12940	1226
+Delaware	5322	1121
+Florida	150453	461
+Georgia	152638	1221
+Hawaii	16736	NaN
+Idaho	216407	632
+Illinois	145911	1022
+Indiana	93705	1070
+Iowa	145740	881
+Kansas	213095	739
+Kentucky	104656	1181
+Louisiana	122614	1332
+Maine	84882	691
+Maryland	27479	1077
+Massachusetts	21321	1029
+Michigan	151153	506
+Minnesota	218550	611
+Mississippi	123546	1461
+Missouri	180533	1086
+Montana	380819	521
+Nebraska	200332	607
+Nevada	286306	300
+New Hampshire	24035	1126
+New Jersey	20173	1036
+New Mexico	314887	368
+New York	127047	904
+North Carolina	130397	1131
+North Dakota	183091	468
+Ohio	106994	967
+Oklahoma	181032	808
+Oregon	251397	828
+Pennsylvania	117348	1106
+Rhode Island	2869	1022
+South Carolina	80685	1051
+South Dakota	199737	525
+Tennessee	109150	1347
+Texas	687005	532
+Utah	219866	360
+Vermont	24894	1170
+Virginia	105704	1098
+Washington	176771	1022
+West Virginia	62753	1103
+Wisconsin	145336	726
+Wyoming	253317	411
+District of Columbia	177	1084

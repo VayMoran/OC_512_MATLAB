@@ -16,7 +16,7 @@ A(A<0)=0;
 
 % Prepare data for table
 varTypes = ["string","double","double"];
-varNames = ["State", "Area (km^2)", "Precipitation"];
+varNames = ["State", "Area (km^2)", "Precipitation (m)"];
 table_size = [51 3];
 
 % Create Table for my data
@@ -35,7 +35,7 @@ for i = 1:size(states)
     
     % Put State name and area into table
     my_data.State(i) = current_state;
-    my_data.("Area (km^2)")(i) = current_area;
+    my_data.("Area (km^2)")(i) = round(current_area);
     
     % Find Bounding lat and lon of current state
     latlim = states(i).BoundingBox(:,2)';
@@ -62,6 +62,8 @@ for i = 1:size(states)
     % Find current average precipitaiton
     precip_mean = precip_total/precip_counter;
     % Output precipitation
-    my_data.Precipitation(i) = precip_mean;
+    my_data.("Precipitation (m)")(i) = round(precip_mean);
 end
+
+writetable(my_data, "USA Area and Annual Precipitation.txt",'Delimiter','tab');
 

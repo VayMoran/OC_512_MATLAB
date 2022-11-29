@@ -8,16 +8,15 @@ current_ellipsoid =referenceEllipsoid('wgs84');
 
 % Load precipitation data
 [A,R] = readgeoraster('PRISM_ppt_30yr_normal_4kmM2_annual_asc\PRISM_ppt_30yr_normal_4kmM2_annual_asc.asc');
+% Replace null precipitation with 0
 A(A<0)=0;
 % Create Lon/Lat grid of precipitaiton data
 [rain_lon,rain_lat]=meshgrid([0:1:R.RasterSize(2)-1]*R.CellExtentInLongitude+R.LongitudeLimits(1), ...
 [R.RasterSize(1)-1:-1:0]*R.CellExtentInLatitude+R.LatitudeLimits(1));
 
-%pcolor(rain_lon,rain_lat,A)
-
 % Prepare data for table
 varTypes = ["string","double","double"];
-varNames = ["State", "Area (km^2)", "Precipitation"];
+varNames = ["State", "Area (km^2)", "Precipitation (m)"];
 table_size = [51 3];
 
 % Create Table for my data
@@ -37,50 +36,34 @@ for i = 1:size(states)
     % Put State name and area into table
     my_data.State(i) = current_state;
     my_data.("Area (km^2)")(i) = current_area;
-
+    
+    % Find Bounding lat and lon of current state
     latlim = states(i).BoundingBox(:,2)';
     lonlim = states(i).BoundingBox(:,1)';
-
+    
+    % Find rain lat and lon data inside current state
     tf = ingeoquad(rain_lat,rain_lon,latlim,lonlim);
     precip_total = 0;
     precip_counter = 0;
     precip_mean = 0;
-
+    
+    % Iterate through Data
     for j = 1:621
         for k = 1:1405
+            % If Data point is in state bounds
             if tf(j,k) == 1
+                % Add precipitation and count number of data points
                 precip_total = precip_total + A(j,k);
-                precip_counter = precip_counter +1
+                precip_counter = precip_counter +1;
             end
         end
     end
-
+    
+    % Find current average precipitaiton
     precip_mean = precip_total/precip_counter;
-    my_data.Precipitation(i) = precip_mean
+    % Output precipitation
+    my_data.("Precipitation (m)")(i) = precip_mean;
 end
 
-%%
-test_state = shaperead('usastatehi','UseGeoCoords',true);
-test_state_oregon = test_state(37,:)
-latlim = test_state_oregon.BoundingBox(:,2)'
-lonlim = test_state_oregon.BoundingBox(:,1)'
-
-tf = ingeoquad(rain_lat,rain_lon,latlim,lonlim);
-precip_total = 0;
-precip_counter = 0;
-precip_mean = 0;
-
-for j = 1:621
-    for k = 1:1405
-        if tf(j,k) == 1
-            precip_total = precip_total + A(j,k)
-            precip_counter = precip_counter +1
-        end
-    end
-end
-
-precip_mean = precip_total/precip_counter;
-
-
-
+writetable(my_data, "USA Area and Annual Precipitation.txt")
 
